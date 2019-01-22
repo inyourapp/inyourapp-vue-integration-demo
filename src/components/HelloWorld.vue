@@ -1,11 +1,17 @@
 <template>
   <div class="hello">
-    <h1>Text AI Demo</h1>
+    <h1>Vue.js Text AI Demo</h1>
     <p>Type or paste any text into the textarea below</p>
     <textarea v-model="input"></textarea>
-    <p>Results:</p>
+    <p>
+      Response from the
+      <a href="" target="_blank">https://api.inyourapp.ai/v0/text</a> endpoint:
+    </p>
     <textarea v-model="output"></textarea>
     <ul>
+      <li>
+        <a href="https://inyourapp.docs.apiary.io/" target="_blank">API Docs</a>
+      </li>
       <li>
         For more information, visit
         <a href="https://inyourapp.ai/" target="_blank">inyourapp.ai</a>
@@ -27,14 +33,16 @@ export default {
     };
   },
   watch: {
-    input(val, oldVal) {
+    input(val) {
       console.log('Input changed to: ', val);
       this.processInput(val);
     },
   },
   methods: {
     async processInput(input) {
-      console.log('Querying REST API Endpoint...');
+      console.log(
+        'Querying the https://api.inyourapp.ai/v0/text REST API Endpoint...',
+      );
       try {
         const parsedBody = await request({
           method: 'POST',
@@ -47,7 +55,7 @@ export default {
           },
           json: true,
         });
-        this.output = JSON.stringify(parsedBody);
+        this.output = JSON.stringify(parsedBody, null, '\t');
       } catch (err) {
         console.error(err);
       }
@@ -56,7 +64,6 @@ export default {
   created() {
     this.processInput = debounce(this.processInput, 500);
   },
-
 };
 </script>
 
