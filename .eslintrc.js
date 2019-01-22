@@ -25,6 +25,8 @@ module.exports = {
   },
   // add your custom rules here
   rules: {
+    // allow but warn about console usage in code
+    "no-console": "warn",
     // don't require .vue extension when importing
     'import/extensions': ['error', 'always', {
       js: 'never',

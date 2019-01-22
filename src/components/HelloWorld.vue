@@ -1,47 +1,62 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank"> Core Docs </a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank"> Forum </a></li>
-      <li>
-        <a href="https://chat.vuejs.org" target="_blank"> Community Chat </a>
-      </li>
-      <li><a href="https://twitter.com/vuejs" target="_blank"> Twitter </a></li>
-      <br />
-      <li>
-        <a href="http://vuejs-templates.github.io/webpack/" target="_blank">
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
+    <h1>Text AI Demo</h1>
+    <p>Type or paste any text into the textarea below</p>
+    <textarea v-model="input"></textarea>
+    <p>Results:</p>
+    <textarea v-model="output"></textarea>
     <ul>
       <li>
-        <a href="http://router.vuejs.org/" target="_blank"> vue-router </a>
-      </li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank"> vuex </a></li>
-      <li>
-        <a href="http://vue-loader.vuejs.org/" target="_blank"> vue-loader </a>
-      </li>
-      <li>
-        <a href="https://github.com/vuejs/awesome-vue" target="_blank">
-          awesome-vue
-        </a>
+        For more information, visit
+        <a href="https://inyourapp.ai/" target="_blank">inyourapp.ai</a>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+import debounce from 'lodash.debounce';
+import request from 'request-promise-native';
+
 export default {
   name: 'HelloWorld',
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App',
+      input: '',
+      output: '',
     };
   },
+  watch: {
+    input(val, oldVal) {
+      console.log('Input changed to: ', val);
+      this.processInput(val);
+    },
+  },
+  methods: {
+    async processInput(input) {
+      console.log('Querying REST API Endpoint...');
+      try {
+        const parsedBody = await request({
+          method: 'POST',
+          uri: 'https://api.inyourapp.ai/v0/text',
+          headers: {
+            apiKey: 'foo',
+          },
+          body: {
+            text: input,
+          },
+          json: true,
+        });
+        this.output = JSON.stringify(parsedBody);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+  },
+  created() {
+    this.processInput = debounce(this.processInput, 500);
+  },
+
 };
 </script>
 
@@ -61,5 +76,9 @@ li {
 }
 a {
   color: #42b983;
+}
+textarea {
+  width: 50%;
+  min-height: 200px;
 }
 </style>
