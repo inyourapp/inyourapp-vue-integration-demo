@@ -45,6 +45,11 @@ export default {
       );
       try {
         const parsedBody = await request({
+          method: 'GET',
+          uri:
+            `https://api.inyourapp.ai/v0/text?text=${
+              encodeURIComponent(input)}`,
+          /*
           method: 'POST',
           uri: 'https://api.inyourapp.ai/v0/text',
           headers: {
@@ -53,6 +58,7 @@ export default {
           body: {
             text: input,
           },
+          */
           json: true,
         });
         this.output = JSON.stringify(parsedBody, null, '\t');
