@@ -25,7 +25,7 @@ import debounce from 'lodash.debounce';
 import request from 'request-promise-native';
 
 export default {
-  name: 'HelloWorld',
+  name: 'HelloText',
   data() {
     return {
       input: '',
